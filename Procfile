@@ -1,1 +1,1 @@
-web: gunicorn watchsync.py --log-file -
+web: gunicorn watchsync:app
