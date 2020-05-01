@@ -1,1 +1,1 @@
-web: gunicorn watchsync:app
+web: gunicorn main:app
