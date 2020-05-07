@@ -23,14 +23,17 @@
     	alert("{{js}}");
     };*/
     $(document).ready(function(){
+        var userAction=true;
         var socket = io.connect('https://' + document.domain + ':' + location.port,{transports: ['websocket']});
         $("video").on("pause", function (e) {
-            socket.emit('p',{time:"0P" + e.target.currentTime},broadcast=true);
+            if userAction===true:
+                socket.send("0P" + e.target.currentTime,broadcast=true);
 
 
         });
         $("video").on("play", function (e) {
-            socket.emit('p',{time:"1P" + e.target.currentTime},broadcast=true );
+            if userAction===true:
+                socket.send("1P" + e.target.currentTime,broadcast=true );
 
         });
 
@@ -38,21 +41,21 @@
         socket.on('connect', function(){
             socket.send('User has connected!');
         });
-        socket.on('p', function(msg){
-            socket.send('msg.time');
+        socket.on('message', function(msg){
+            userAction=false
             if (msg.charAt(0)=="0"){
-                if (video.currentTime!==msg.time.slice(2)){
-                    video.currentTime=msg.time.slice(2)
+                if (video.currentTime!==msg.slice(2)){
+                    video.currentTime=msg.slice(2)
                 }
                 $("#video").get(0).pause();
             }
             if (msg.charAt(0)=="1"){
-                if (video.currentTime!==msg.time.slice(2)){
-                    video.currentTime=msg.time.slice(2)
+                if (video.currentTime!==msg.slice(2)){
+                    video.currentTime=msg.slice(2)
                 }
                 $("#video").get(0).play();
             }
-
+            userAction=true
         });
     });
 
