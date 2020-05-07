@@ -27,16 +27,12 @@
         var userAction=true;
         var socket = io.connect('https://' + document.domain + ':' + location.port,{transports: ['websocket']});
         $("video").on("pause", function (e) {
-            if (userAction===true){
                 socket.send("0P" + e.target.currentTime);
-            }
 
 
         });
         $("video").on("play", function (e) {
-            if (userAction===true){
                 socket.send("1P" + e.target.currentTime);
-            }
 
         });
 
