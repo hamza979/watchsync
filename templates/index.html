@@ -47,7 +47,7 @@
                     video.currentTime=msg.time.slice(2)
                 }
                 $("#video").get(0).pause();
-            }
+            })
         socket.on('play', function(msg){
                 console.log(msg)
                 if (video.currentTime!==msg.time.slice(2)){
@@ -55,8 +55,6 @@
                 }
                 $("#video").get(0).play();
             }
-
-        );
     });
 
 
