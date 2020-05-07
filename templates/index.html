@@ -25,12 +25,12 @@
     $(document).ready(function(){
         var socket = io.connect('https://' + document.domain + ':' + location.port,{transports: ['websocket']});
         $("video").on("pause", function (e) {
-            socket.broadcast.emit("0P" + e.target.currentTime );
+            io.broadcast.emit("0P" + e.target.currentTime );
 
 
         });
         $("video").on("play", function (e) {
-            socket.broadcast.emit("1P" + e.target.currentTime );
+            io.broadcast.emit("1P" + e.target.currentTime );
 
         });
 
