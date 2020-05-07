@@ -26,14 +26,16 @@
         var userAction=true;
         var socket = io.connect('https://' + document.domain + ':' + location.port,{transports: ['websocket']});
         $("video").on("pause", function (e) {
-            if userAction===true:
+            if userAction===true{
                 socket.send("0P" + e.target.currentTime,broadcast=true);
+            }
 
 
         });
         $("video").on("play", function (e) {
-            if userAction===true:
+            if userAction===true{
                 socket.send("1P" + e.target.currentTime,broadcast=true );
+            }
 
         });
 
@@ -42,20 +44,20 @@
             socket.send('User has connected!');
         });
         socket.on('message', function(msg){
-            userAction=false
+            userAction=false;
             if (msg.charAt(0)=="0"){
                 if (video.currentTime!==msg.slice(2)){
-                    video.currentTime=msg.slice(2)
+                    video.currentTime=msg.slice(2);
                 }
                 $("#video").get(0).pause();
             }
             if (msg.charAt(0)=="1"){
                 if (video.currentTime!==msg.slice(2)){
-                    video.currentTime=msg.slice(2)
+                    video.currentTime=msg.slice(2);
                 }
                 $("#video").get(0).play();
             }
-            userAction=true
+            userAction=true;
         });
     });
 
