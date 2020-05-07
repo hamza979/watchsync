@@ -23,7 +23,7 @@
     	alert("{{js}}");
     };*/
     $(document).ready(function(){
-        var socket = io.connect();
+        var socket = io.connect(,{transports: ['websocket']});
         $("video").on("pause", function (e) {
             socket.send("0P" + e.target.currentTime );
 
