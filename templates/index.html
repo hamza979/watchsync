@@ -39,6 +39,7 @@
             socket.send('User has connected!');
         });
         socket.on('p', function(msg){
+            socket.send(msg)
             if (msg.charAt(0)=="0"){
                 if (video.currentTime!==msg.slice(2)){
                     video.currentTime=msg.slice(2)
