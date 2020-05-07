@@ -23,21 +23,24 @@
     	alert("{{js}}");
     };*/
     $(document).ready(function(){
+
+
         var socket = io.connect('https://' + document.domain + ':' + location.port,{transports: ['websocket']});
+        socket.on('connect', function(){
+            socket.send('User has connected!');
+        });
         $("video").on("pause", function (e) {
-            e.broadcast.emit("0P" + e.target.currentTime );
+            socket.emit("0P" + e.target.currentTime,broadcast=True );
 
 
         });
         $("video").on("play", function (e) {
-            e.broadcast.emit("1P" + e.target.currentTime );
+            socket.emit("1P" + e.target.currentTime,broadcast=True );
 
         });
 
 
-        socket.on('connect', function(){
-            socket.send('User has connected!');
-        });
+
         socket.on('message', function(msg){
             if (msg.charAt(0)=="0"){
                 if (video.currentTime!==msg.slice(2)){
