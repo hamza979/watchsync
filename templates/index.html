@@ -45,7 +45,7 @@
                     video.currentTime=msg.slice(2);
                 }
                 userAction=false;
-                $("#video").get(0).pause();
+                video.pause()
             }else{
             if (msg.charAt(0)=="1"){
                 userAction=false;
@@ -53,7 +53,7 @@
                     video.currentTime=msg.slice(2);
                 }
                 userAction=false;
-                $("#video").get(0).play();
+                video.play()
             }}
             userAction=true;
         });
