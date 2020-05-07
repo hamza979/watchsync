@@ -27,12 +27,16 @@
         var userAction=true;
         var socket = io.connect('https://' + document.domain + ':' + location.port,{transports: ['websocket']});
         $("video").on("pause", function (e) {
+            if (userAction===true){
                 socket.send("0P" + e.target.currentTime);
+            }
 
 
         });
         $("video").on("play", function (e) {
+            if (userAction===true){
                 socket.send("1P" + e.target.currentTime);
+            }
 
         });
 
@@ -56,7 +60,7 @@
                 if (video.currentTime!==msg.slice(2)){
                     video.currentTime=msg.slice(2);
                 }
-                var isPlaying = video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
+                var isPlaying = video.currentTime > 0 && !video.paused && !video.ended && !video.readyState > 2;
                 if (!isPlaying){
                 userAction=false;
                 $("#video").get(0).play();}
