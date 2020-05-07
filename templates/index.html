@@ -49,13 +49,18 @@
                 if (video.currentTime!==msg.slice(2)){
                     video.currentTime=msg.slice(2);
                 }
-                $("#video").get(0).pause();
+                var isPlaying = video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
+                if (isPlaying){
+                $("#video").get(0).pause();}
             }
             if (msg.charAt(0)=="1"){
+
                 if (video.currentTime!==msg.slice(2)){
                     video.currentTime=msg.slice(2);
                 }
-                $("#video").get(0).play();
+                var isPlaying = video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
+                if (!isPlaying){
+                $("#video").get(0).play();}
             }
             userAction=true;
         });
