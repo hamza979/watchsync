@@ -41,9 +41,6 @@
         });
 
 
-        socket.on('connect', function(){
-            socket.send('User has connected!');
-        });
         socket.on('message', function(msg){
             if (msg.charAt(0)=="0"){
                 userAction=false;
