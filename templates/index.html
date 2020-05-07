@@ -25,12 +25,12 @@
     $(document).ready(function(){
         var socket = io.connect('https://' + document.domain + ':' + location.port,{transports: ['websocket']});
         $("video").on("pause", function (e) {
-            socket.emit("0P" + e.target.currentTime,broadcast=true);
+            socket.emit('p',"0P" + e.target.currentTime,broadcast=true);
 
 
         });
         $("video").on("play", function (e) {
-            socket.emit("1P" + e.target.currentTime,broadcast=true );
+            socket.emit('p',"1P" + e.target.currentTime,broadcast=true );
 
         });
 
@@ -38,7 +38,7 @@
         socket.on('connect', function(){
             socket.send('User has connected!');
         });
-        socket.on('message', function(msg){
+        socket.on('p', function(msg){
             if (msg.charAt(0)=="0"){
                 if (video.currentTime!==msg.slice(2)){
                     video.currentTime=msg.slice(2)
