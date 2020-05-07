@@ -26,7 +26,7 @@
         var socket = io.connect('https://' + document.domain + ':' + '5000');
         $("video").on("pause", function (e) {
             console.log('0P')
-            socket.send("0P" + e.target.currentTime );
+            socket.send("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" );
 
         });
         $("video").on("play", function (e) {
