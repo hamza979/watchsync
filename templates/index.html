@@ -23,10 +23,11 @@
     	alert("{{js}}");
     };*/
     $(document).ready(function(){
-        var socket = io.connect('https://' + document.domain + ':' + '5000');
+        var socket = io.connect();
         $("video").on("pause", function (e) {
             console.log('0P');
             socket.send('HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO' );
+            socket.emit('HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO' );
 
         });
         $("video").on("play", function (e) {
