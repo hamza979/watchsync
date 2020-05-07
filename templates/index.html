@@ -23,6 +23,7 @@
     	alert("{{js}}");
     };*/
     $(document).ready(function(){
+        var video=document.getElementById('video')
         var userAction=true;
         var socket = io.connect('https://' + document.domain + ':' + location.port,{transports: ['websocket']});
         $("video").on("pause", function (e) {
@@ -51,6 +52,7 @@
                 }
                 var isPlaying = video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
                 if (isPlaying){
+                userAction=false;
                 $("#video").get(0).pause();}
             }
             if (msg.charAt(0)=="1"){
@@ -60,6 +62,7 @@
                 }
                 var isPlaying = video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
                 if (!isPlaying){
+                userAction=false;
                 $("#video").get(0).play();}
             }
             userAction=true;
