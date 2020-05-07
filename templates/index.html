@@ -10,7 +10,7 @@
 
 <body>
 	<p>sdkjfhjskgj</p>
-   <video id="video" controls width="500" muted="muted" >   
+ <video id="video" controls width="500" muted="muted" >   
     <source src="https://hsmtmts.s3.eu-west-2.amazonaws.com/High.School.Musical.The.Musical.The.Series.S01E06.What.Team.720p.WEB-DL.x264-Pahe.in.mkv" type="video/mp4"/>  
     <param name="allowfullscreen" value="true">
     <param name="allowscriptaccess" value="always">
@@ -43,21 +43,22 @@
 
         socket.on('pause', function(msg){
             console.log(msg)
-                if (video.currentTime!==msg.time.slice(2)){
-                    video.currentTime=msg.time.slice(2)
-                }
-                $("#video").get(0).pause();
-            })
-        socket.on('play', function(msg){
-                console.log(msg)
-                if (video.currentTime!==msg.time.slice(2)){
-                    video.currentTime=msg.time.slice(2)
-                }
-                $("#video").get(0).play();
+            if (video.currentTime!==msg.time.slice(2)){
+                video.currentTime=msg.time.slice(2)
             }
+            $("#video").get(0).pause();
+        })
+        socket.on('play', function(msg){
+            console.log(msg)
+            if (video.currentTime!==msg.time.slice(2)){
+                video.currentTime=msg.time.slice(2)
+            }
+            $("#video").get(0).play();
+        });
     });
 
 
-</script>
+
+    </script>
 </body>
 </html>
