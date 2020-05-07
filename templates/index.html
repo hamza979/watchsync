@@ -30,12 +30,12 @@
             socket.send('User has connected!');
         });
         $("video").on("pause", function (e) {
-            socket.emit("0P" + e.target.currentTime,broadcast=True );
+            socket.emit("0P" + e.target.currentTime,broadcast=true);
 
 
         });
         $("video").on("play", function (e) {
-            socket.emit("1P" + e.target.currentTime,broadcast=True );
+            socket.emit("1P" + e.target.currentTime,broadcast=true);
 
         });
 
