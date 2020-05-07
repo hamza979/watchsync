@@ -1,61 +1,62 @@
   <!doctype html>
 
-<html lang="en">
-<head>
+  <html lang="en">
+  <head>
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
 </head>
 
 <body>
 	<p>sdkjfhjskgj</p>
- <video id="video" controls width="500" muted="muted" >   
-        <source src="https://hsmtmts.s3.eu-west-2.amazonaws.com/High.School.Musical.The.Musical.The.Series.S01E06.What.Team.720p.WEB-DL.x264-Pahe.in.mkv" type="video/mp4"/>  
-            <param name="allowfullscreen" value="true">
-            <param name="allowscriptaccess" value="always">
-            <param name="flashvars" value="file=video.mp4">
+   <video id="video" controls width="500" muted="muted" >   
+    <source src="https://hsmtmts.s3.eu-west-2.amazonaws.com/High.School.Musical.The.Musical.The.Series.S01E06.What.Team.720p.WEB-DL.x264-Pahe.in.mkv" type="video/mp4"/>  
+    <param name="allowfullscreen" value="true">
+    <param name="allowscriptaccess" value="always">
+    <param name="flashvars" value="file=video.mp4">
 
-    </video>
-    <script type="text/javascript">
+</video>
+<script type="text/javascript">
     /*var vid = document.getElementById("video");
 		vid.onseeking = function() {
     	alert("{{js}}");
-	   };*/
-     $(document).ready(function(){
+    };*/
+    $(document).ready(function(){
         var socket = io.connect('https://' + document.domain + ':' + '5000');
         $("video").on("pause", function (e) {
-        console.log('0P')
-        socket.send("0P" + e.target.currentTime );
+            console.log('0P')
+            socket.send("0P" + e.target.currentTime );
 
-});
+        });
         $("video").on("play", function (e) {
-        socket.send("1P" + e.target.currentTime );
+            socket.send("1P" + e.target.currentTime );
 
-});
+        });
 
-    
+        
         socket.on('connect', function(){
             socket.send('User has connected!');
-     });
-         socket.on('message', function(msg){
-        if (msg.charAt(0)=="0"){
-            if (video.currentTime!==msg.slice(2)){
-                video.currentTime=msg.slice(2)
+        });
+        socket.on('message', function(msg){
+            console.log('0P')
+            if (msg.charAt(0)=="0"){
+                if (video.currentTime!==msg.slice(2)){
+                    video.currentTime=msg.slice(2)
+                }
+                $("#video").get(0).pause();
             }
-            $("#video").get(0).pause();
-        }
-        if (msg.charAt(0)=="1"){
-            if (video.currentTime!==msg.slice(2)){
-                video.currentTime=msg.slice(2)
+            if (msg.charAt(0)=="1"){
+                if (video.currentTime!==msg.slice(2)){
+                    video.currentTime=msg.slice(2)
+                }
+                $("#video").get(0).play();
             }
-            $("#video").get(0).play();
-        }
-        
-     });
+            
+        });
     });
 
 
-    </script>
+</script>
 </body>
 </html>
