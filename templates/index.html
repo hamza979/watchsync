@@ -25,9 +25,8 @@
     $(document).ready(function(){
         var socket = io.connect();
         $("video").on("pause", function (e) {
-            console.log('0P');
-            socket.send('HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO' );
-            socket.emit('HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO' );
+            socket.send("1P" + e.target.currentTime );
+
 
         });
         $("video").on("play", function (e) {
@@ -41,7 +40,6 @@
             socket.send('User has connected!');
         });
         socket.on('message', function(msg){
-            console.log('0P')
             if (msg.charAt(0)=="0"){
                 if (video.currentTime!==msg.slice(2)){
                     video.currentTime=msg.slice(2)
