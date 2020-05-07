@@ -39,16 +39,16 @@
             socket.send('User has connected!');
         });
         socket.on('p', function(msg){
-            socket.send(msg)
+            socket.send(msg.time);
             if (msg.charAt(0)=="0"){
-                if (video.currentTime!==msg.slice(2)){
-                    video.currentTime=msg.slice(2)
+                if (video.currentTime!==msg.time.slice(2)){
+                    video.currentTime=msg.time.slice(2)
                 }
                 $("#video").get(0).pause();
             }
             if (msg.charAt(0)=="1"){
-                if (video.currentTime!==msg.slice(2)){
-                    video.currentTime=msg.slice(2)
+                if (video.currentTime!==msg.time.slice(2)){
+                    video.currentTime=msg.time.slice(2)
                 }
                 $("#video").get(0).play();
             }
