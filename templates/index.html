@@ -54,7 +54,7 @@
                 if (isPlaying){
                 userAction=false;
                 $("#video").get(0).pause();}
-            }
+            }else{
             if (msg.charAt(0)=="1"){
                 userAction=false;
                 if (video.currentTime!==msg.slice(2)){
@@ -64,7 +64,7 @@
                 if (!isPlaying){
                 userAction=false;
                 $("#video").get(0).play();}
-            }
+            }}
             userAction=true;
         });
     });
