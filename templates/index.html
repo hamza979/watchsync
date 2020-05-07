@@ -30,32 +30,33 @@
             socket.send('User has connected!');
         });
         $("video").on("pause", function (e) {
-            socket.emit("0P" + e.target.currentTime,broadcast=true);
+            socket.emit('pause',{time:e.target.currentTime},broadcast=true);
 
 
         });
         $("video").on("play", function (e) {
-            socket.emit("1P" + e.target.currentTime,broadcast=true);
+            socket.emit('play',{time:e.target.currentTime},broadcast=true);
 
         });
 
 
 
-        socket.on('message', function(msg){
-            if (msg.charAt(0)=="0"){
-                if (video.currentTime!==msg.slice(2)){
-                    video.currentTime=msg.slice(2)
+        socket.on('pause', function(msg){
+            console.log(msg)
+                if (video.currentTime!==msg.time.slice(2)){
+                    video.currentTime=msg.time.slice(2)
                 }
                 $("#video").get(0).pause();
             }
-            if (msg.charAt(0)=="1"){
-                if (video.currentTime!==msg.slice(2)){
-                    video.currentTime=msg.slice(2)
+        socket.on('play', function(msg){
+                console.log(msg)
+                if (video.currentTime!==msg.time.slice(2)){
+                    video.currentTime=msg.time.slice(2)
                 }
                 $("#video").get(0).play();
             }
 
-        });
+        );
     });
 
 
