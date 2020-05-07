@@ -25,8 +25,8 @@
     $(document).ready(function(){
         var socket = io.connect('https://' + document.domain + ':' + '5000');
         $("video").on("pause", function (e) {
-            console.log('0P')
-            socket.send("HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO" );
+            console.log('0P');
+            socket.send('HELLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO' );
 
         });
         $("video").on("play", function (e) {
