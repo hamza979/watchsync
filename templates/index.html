@@ -34,8 +34,9 @@
 
         });
 
-        
+
         socket.on('connect', function(){
+            console.log('hello')
             socket.send('User has connected!');
         });
         socket.on('message', function(msg){
@@ -52,7 +53,7 @@
                 }
                 $("#video").get(0).play();
             }
-            
+
         });
     });
 
