@@ -37,6 +37,9 @@
                 socket.send("1P" + e.target.currentTime);
 
         });
+        socket.on('connect'),function(){
+            socket.emit('join',{'room':'{{roomID}}'})
+        }
 
        socket.on('message', function(msg){
             if (msg.charAt(0)=="0"){
