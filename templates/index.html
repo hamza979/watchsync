@@ -22,45 +22,55 @@
 		vid.onseeking = function() {
     	alert("{{js}}");
     };*/
+    var channel={{roomID}}
     $(document).ready(function(){
+        console.log(channel)
         var video=document.getElementById('video')
         var userAction=true;
-        var socket = io.connect('https://' + document.domain + ':' + location.port,{transports: ['websocket']});
+        /*var socket = io.connect('https://' + document.domain + ':' + location.port,{transports: ['websocket']});*/
+        var socket=io.connect('localhost:5000')
+        socket.on('connect', function(){
+            socket.emit('join',{'channel':channel});
+        });
+        socket.emit('jumba',{'channel':channel})
         $("video").on("pause", function (e) {
+                if (userAction===true){
                 if (video.readyState==4){
-                socket.send("0P" + e.target.currentTime);}
+                socket.emit('pause',{'time':e.target.currentTime,'channel':channel})}
+            }
             
 
 
         });
         $("video").on("play", function (e) {
-                socket.send("1P" + e.target.currentTime);
+                if (userAction===true){
+                socket.emit('play',{'time':e.target.currentTime,'channel':channel})
+            }
 
         });
-        socket.on('connect'),function(){
-            socket.emit('join',{'room':'{{roomID}}'})
-        }
-
-       socket.on('message', function(msg){
-            if (msg.charAt(0)=="0"){
+        socket.on('success',function(data){
+            alert(data);
+        })
+       socket.on('pause', function(msg){
                 userAction=false;
-                if (video.currentTime!==msg.slice(2)){
-                    video.currentTime=msg.slice(2);
+                if (video.currentTime!==msg.time){
+                    video.currentTime=msg.time
                 }
-                userAction=false;
                 video.pause()
-            }else{
-            if (msg.charAt(0)=="1"){
+                userAction=true
+            })
+
+        socket.on('play', function(msg){
                 userAction=false;
-                if (video.currentTime!==msg.slice(2)){
-                    video.currentTime=msg.slice(2);
+                if (video.currentTime!==msg.time){
+                    video.currentTime=msg.time
                 }
-                userAction=false;
                 video.play()
-            }}
-            userAction=true;
-        });
-    });
+                userAction=true
+            }
+
+        )})
+    
 
 
 </script>
