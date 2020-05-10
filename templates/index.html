@@ -55,6 +55,7 @@
             alert(data);
         })
        socket.on('pause', function(msg){
+                console.log("HELLO PAUSE")
                 userAction=false;
                 if (video.currentTime!==msg.time){
                     video.currentTime=msg.time
