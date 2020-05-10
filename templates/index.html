@@ -31,7 +31,7 @@
         if (location.protocol !== 'https:') {
     location.replace(`https:${location.href.substring(location.protocol.length)}`);
 }
-        var socket=io.connect()
+        var socket=io.connect('https://'+'document.domain+'+':'+location.port,{transports:['websocket']})
         socket.on('connect', function(){
             socket.emit('join',{'channel':channel});
         })
