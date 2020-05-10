@@ -28,10 +28,10 @@
         var video=document.getElementById('video')
         var userAction=true;
         /*var socket = io.connect('https://' + document.domain + ':' + location.port,{transports: ['websocket']});*/
-        var socket=io.connect('localhost:5000')
+        var socket=io.connect()
         socket.on('connect', function(){
             socket.emit('join',{'channel':channel});
-        });
+        })
         socket.emit('jumba',{'channel':channel})
         $("video").on("pause", function (e) {
                 if (userAction===true){
@@ -41,13 +41,13 @@
             
 
 
-        });
+        })
         $("video").on("play", function (e) {
                 if (userAction===true){
                 socket.emit('play',{'time':e.target.currentTime,'channel':channel})
             }
 
-        });
+        })
         socket.on('success',function(data){
             alert(data);
         })
@@ -67,9 +67,25 @@
                 }
                 video.play()
                 userAction=true
+            })
+        socket.on('giveMeTime',function(data){
+        var PAUSED='F'
+        if (video.paused){PAUSED='T'}
+        room = channel
+        socket.emit('syncWithTime',{'time':video.currentTime,'channel':room,'paused':video.paused})})
+        socket.on('syncWithTime',function(data){
+            console.log(data.time)
+            video.currentTime=data.time
+            userAction=false
+            console.log(data.paused)
+            if (data.paused===false){
+                video.play()
             }
-
-        )})
+            userAction=true
+            })
+        
+    }
+    )
     
 
 

@@ -19,7 +19,16 @@ def handleJumba(data):
 def on_join(data):
     room = data['channel']
     join_room(room)
+    emit('giveMeTime',{'channel':room},room=room,broadcast=True,include_self=False)
     print('user' + ' has entered the room.'+str(room))
+
+
+@socketio.on('syncWithTime')
+def syncTime(data):
+	room=data['channel']
+	time=data['time']
+	emit('syncWithTime',{'time':time,'paused':data['paused']},room=room,broadcast=True,include_self=False)
+  
   
 
 
@@ -28,20 +37,13 @@ def play(data):
     room = data['channel']
     time=data['time']
     print(str(room)+str(time)+'PLAY REQUEST RECIEVED')
-    emit('play',{'time':time},room=room,broadcast=True)
+    emit('play',{'time':time},room=room,broadcast=True,include_self=False)
 @socketio.on('pause')
 def pause(data):
     room = data['channel']
     time=data['time']
     print(str(room)+str(time)+'PAUSE REQUEST RECIEVED')
-    emit('pause',{'time':time},room=room,broadcast=True)
-
-
-@socketio.on('brain')
-def on_join(data):
-    room = data['channel']
-    join_room(room)
-    print('user' + ' has entered the room.'+str(room))
+    emit('pause',{'time':time},room=room,broadcast=True,include_self=False)
 
 @socketio.on('leave')
 def on_leave(data):
