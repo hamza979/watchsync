@@ -28,7 +28,7 @@
         var video=document.getElementById('video')
         var userAction=true;
         /*var socket = io.connect('https://' + document.domain + ':' + location.port,{transports: ['websocket']});*/
-        var socket=io.connect()
+        var socket=io.connect('http://'+document.domain+':'+'5000')
         socket.on('connect', function(){
             socket.emit('join',{'channel':channel});
         })
