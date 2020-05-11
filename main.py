@@ -53,8 +53,17 @@ def on_leave(data):
     send(username + ' has left the room.', room=room)
 
 @app.route('/<int:roomID>')
-def index(roomID):
-	return render_template('index.html',roomID=roomID)
+def roomN(roomID):
+	return render_template('roomN.html',roomID=roomID)
 
+@app.route('/')
+def index():
+	return render_template('index.html')
+@app.route('/create')
+def create():
+	return render_template('create.html')
+@app.route('/join')
+def join():
+	return render_template('join.html')
 if __name__ == '__main__':
 	socketio.run(app)
