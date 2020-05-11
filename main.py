@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, send, join_room, leave_room,emit
-import os, json, boto3
+import os, json, boto3, threading, s3transfer
 app = Flask(__name__)
 app.config['SECRET_KEY']='mysecret'
 socketio=SocketIO(app)
@@ -10,11 +10,6 @@ socketio.init_app(app, cors_allowed_origins="*")
 def handleMessage(msg):
 	print ('Message: '+msg)
 	send (msg,broadcast=True)
-
-@socketio.on('jumba')
-def handleJumba(data):
-	print('hi')
-	emit('WE ARE IN ROOMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM: '+str(data['channel']),room=data['channel'])
 
 @socketio.on('join')
 def on_join(data):
@@ -57,13 +52,6 @@ def on_leave(data):
 def roomN(roomID):
 	return render_template('roomN.html',roomID=roomID)
 
-@app.route('/')
-def index():
-	return render_template('index.html')
-@app.route("/account/")
-def account():
-    return render_template('account.html')
-
 
 @app.route('/join')
 def join():
@@ -71,37 +59,41 @@ def join():
 if __name__ == '__main__':
 	socketio.run(app)
 
-@app.route('/sign_s3/')
-def sign_s3():
-  S3_BUCKET = os.environ.get('S3_BUCKET')
-  print('Hello')
-  file_name = request.args.get('file_name')
-  file_type = request.args.get('file_type')
+@app.route('/')
+def index():
+    return '''<form method=POST enctype=multipart/form-data action="upload">
+    <input type=file name=myfile>
+    <input type=submit>
+    </form>'''
 
-  s3 = boto3.client('s3')
+@app.route('/upload', methods=['POST'])
+def upload():
+    s3=boto3.client('s3')
+    file=request.files['myfile']
+    class ProgressPercentage(object):
+        def __init__(self, filename):
+            self._filename = filename
+            self._size = file.content_length
+            self._seen_so_far = 0
+            self._lock = threading.Lock()
 
-  presigned_post = s3.generate_presigned_post(
-    Bucket = S3_BUCKET,
-    Key = file_name,
-    Fields = {"acl": "public-read", "Content-Type": file_type},
-    Conditions = [
-      {"acl": "public-read"},
-      {"Content-Type": file_type}
-    ],
-    ExpiresIn = 3600
-  )
+        def __call__(self, bytes_amount):
+            # To simplify, assume this is hooked up to a single filename
+            with self._lock:
+                self._seen_so_far += bytes_amount
+                percentage = (self._seen_so_far / self._size) * 100
+                sys.stdout.write(
+                    "\r%s  %s / %s  (%.2f%%)" % (
+                        self._filename, self._seen_so_far, self._size,
+                        percentage))
+                sys.stdout.flush()
 
-  return json.dumps({
-    'data': presigned_post,
-    'url': 'https://%s.s3.amazonaws.com/%s' % (S3_BUCKET, file_name)
-  })
+    s3.upload_fileobj(
+    file, 'watchsyncus', 'newfile.mp4',
+    Callback=ProgressPercentage(file)
+)
 
-@app.route("/submit_form/", methods = ["POST"])
-def submit_form():
-  username = request.form["username"]
-  full_name = request.form["full-name"]
-  avatar_url = request.form["avatar-url"]
 
-  update_account(username, full_name, avatar_url)
 
-  return redirect(url_for('profile'))
+if __name__ == '__main__':
+    app.run(debug=True)
