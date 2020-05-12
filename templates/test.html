@@ -1,0 +1,71 @@
+<!doctype html>
+
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.24.min.js"></script>
+<script type="text/javascript">
+    AWS.config.update({
+        accessKeyId : 'AKIAIBXBJDAQ3QGMTO5Q',
+        secretAccessKey : '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'
+    });
+</script>
+
+
+	</head>
+	<body>
+		<form id="fileUploadForm" method="post" enctype="multipart/form-data">
+<input type="file" name="file" id="file" value="dataFile" required="">   <input type="submit" value="Submit">
+</form>
+		<script type="text/javascript">
+$("#fileUploadForm").submit(function() {
+var ID=''
+var bucket = new AWS.S3({params: {Bucket: 'watchsyncus'}});
+var fileChooser = document.getElementById('file');
+var file = fileChooser.files[0];
+if (file) {
+var params = {Key: 'pathan.py'};
+bucket.createMultipartUpload(params, function(mpErr, multipart){
+      if (mpErr) { console.log('Error!', mpErr); return; }
+      console.log("Got upload ID", multipart.UploadId)
+      ID=multipart.UploadId
+      })
+	
+var chunkSize = 1024 * 1024;
+  var fileSize = file.size;
+  var chunks = Math.ceil(file.size/chunkSize,chunkSize);
+  var chunk = 0;
+
+  console.log('file size..',fileSize);
+  console.log('chunks...',chunks);
+
+  while (chunk <= chunks) {
+      var offset = chunk*chunkSize;
+      console.log('current chunk..', chunk);
+      console.log('offset...', chunk*chunkSize);
+      console.log('file blob from offset...', offset)
+      var params2={Body:file.slice(offset,offset+chunkSize),UploadId:ID,PartNumber:chunk,Key:'pathan.py'}
+      bucket.uploadPart(params2, function(err, data) {
+  		if (err) console.log(err, err.stack); // an error occurred
+  		else     console.log(data);           // successful response
+});
+      chunk++;
+  }
+  var params3={Key:'pathan.py',UploadId:ID}
+  bucket.completeMultipartUpload(params3, function(err, data) {
+  if (err) console.log(err, err.stack); // an error occurred
+  else     console.log(data);           // successful response
+});
+
+
+/*bucket.upload(params).on('httpUploadProgress', function(evt) {
+document.write("Uploaded :: " + parseInt((evt.loaded * 100) / evt.total)+'%');
+}).send(function(err, data) {
+alert("File uploaded successfully.");
+});*/
+}
+});
+		</script>
+	</body>
+</html>
+

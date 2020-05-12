@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, send, join_room, leave_room,emit
-import os, json, boto3, threading, s3transfer
+from flask_cors import CORS
+import os, json, boto3, threading, s3transfer, sys
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY']='mysecret'
 socketio=SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
@@ -51,7 +53,9 @@ def on_leave(data):
 @app.route('/<int:roomID>')
 def roomN(roomID):
 	return render_template('roomN.html',roomID=roomID)
-
+@app.route('/test',methods=['POST','GET'])
+def test():
+	return render_template('test.html')
 
 @app.route('/join')
 def join():
@@ -70,10 +74,14 @@ def index():
 def upload():
     s3=boto3.client('s3')
     file=request.files['myfile']
+    file.seek(0,os.SEEK_END)
+    file_length=file.tell()
+    sys.stdout.write('stdout')
+    print('print')
     class ProgressPercentage(object):
-        def __init__(self, filename):
+        def __init__(self, filename,filesize):
             self._filename = filename
-            self._size = file.content_length
+            self._size = filesize
             self._seen_so_far = 0
             self._lock = threading.Lock()
 
@@ -86,12 +94,12 @@ def upload():
                     "\r%s  %s / %s  (%.2f%%)" % (
                         self._filename, self._seen_so_far, self._size,
                         percentage))
-                sys.stdout.flush()
 
     s3.upload_fileobj(
     file, 'watchsyncus', 'newfile.mp4',
-    Callback=ProgressPercentage(file)
-)
+    Callback=ProgressPercentage(file,file_length)
+    )   
+    return('<h1>FILE UPLOADED<h1>')
 
 
 
