@@ -28,9 +28,6 @@ def syncTime(data):
 	room=data['channel']
 	time=data['time']
 	emit('syncWithTime',{'time':time,'paused':data['paused']},room=room,broadcast=True,include_self=False)
-  
-  
-
 
 @socketio.on('play')
 def play(data):
@@ -38,6 +35,7 @@ def play(data):
     time=data['time']
     print(str(room)+str(time)+'PLAY REQUEST RECIEVED')
     emit('play',{'time':time},room=room,broadcast=True,include_self=False)
+    
 @socketio.on('pause')
 def pause(data):
     room = data['channel']
@@ -56,9 +54,9 @@ def on_leave(data):
 def roomN(roomID):
 	return render_template('roomN.html',roomID=roomID)
 @app.route('/test',methods=['POST', 'GET'])
-def test():
+def create():
     response = client.assume_role(RoleArn='arn:aws:iam::670717215081:role/watchsyncROLE', RoleSessionName='watchsyncSession')
-    return render_template('test.html',AccessKeyId=response.get('Credentials').get('AccessKeyId'),SecretAccessKey=response.get('Credentials').get('SecretAccessKey'),SessionToken=response.get('Credentials').get('SessionToken'))
+    return render_template('create.html',AccessKeyId=response.get('Credentials').get('AccessKeyId'),SecretAccessKey=response.get('Credentials').get('SecretAccessKey'),SessionToken=response.get('Credentials').get('SessionToken'))
 
 @app.route('/join')
 def join():
