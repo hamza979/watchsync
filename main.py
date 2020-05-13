@@ -58,8 +58,7 @@ def roomN(roomID):
 @app.route('/test',methods=['POST', 'GET'])
 def test():
     response = client.assume_role(RoleArn='arn:aws:iam::670717215081:role/watchsyncROLE', RoleSessionName='watchsyncSession')
-    print(response)
-    return render_template('test.html',creds=response)
+    return render_template('test.html',AccessKeyId=response.get('Credentials').get('AccessKeyId'),SecretAccessKey=response.get('Credentials').get('SecretAccessKey'))
 
 @app.route('/join')
 def join():
