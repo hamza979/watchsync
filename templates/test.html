@@ -6,65 +6,57 @@
 <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.24.min.js"></script>
 <script type="text/javascript">
     AWS.config.update({
-        accessKeyId : 'AKIAIBXBJDAQ3QGMTO5Q',
-        secretAccessKey : '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'
+        accessKeyId : '',
+        secretAccessKey : ''
     });
 </script>
 
 
 	</head>
 	<body>
-		<form id="fileUploadForm" method="post" enctype="multipart/form-data">
-<input type="file" name="file" id="file" value="dataFile" required="">   <input type="submit" value="Submit">
-</form>
-		<script type="text/javascript">
-$("#fileUploadForm").submit(function() {
-var ID=''
+		<label for="myfile">Select a file:</label>
+<input type="file" id="myfile" name="myfile">
+<script type="text/javascript">
+while (1==1){console.log('{{creds}}')}
+var fileselector=document.getElementById('myfile')
+
+fileselector.onchange=function(){
+console.log(fileselector.files[0].name)
 var bucket = new AWS.S3({params: {Bucket: 'watchsyncus'}});
 var fileChooser = document.getElementById('file');
-var file = fileChooser.files[0];
-if (file) {
-var params = {Key: 'pathan.py'};
-bucket.createMultipartUpload(params, function(mpErr, multipart){
-      if (mpErr) { console.log('Error!', mpErr); return; }
-      console.log("Got upload ID", multipart.UploadId)
-      ID=multipart.UploadId
-      })
-	
-var chunkSize = 1024 * 1024;
-  var fileSize = file.size;
-  var chunks = Math.ceil(file.size/chunkSize,chunkSize);
-  var chunk = 0;
+var bucketName = 'watchsyncus';
+var fileToBeUpload = fileselector.files[0];
 
-  console.log('file size..',fileSize);
-  console.log('chunks...',chunks);
-
-  while (chunk <= chunks) {
-      var offset = chunk*chunkSize;
-      console.log('current chunk..', chunk);
-      console.log('offset...', chunk*chunkSize);
-      console.log('file blob from offset...', offset)
-      var params2={Body:file.slice(offset,offset+chunkSize),UploadId:ID,PartNumber:chunk,Key:'pathan.py'}
-      bucket.uploadPart(params2, function(err, data) {
-  		if (err) console.log(err, err.stack); // an error occurred
-  		else     console.log(data);           // successful response
-});
-      chunk++;
-  }
-  var params3={Key:'pathan.py',UploadId:ID}
-  bucket.completeMultipartUpload(params3, function(err, data) {
-  if (err) console.log(err, err.stack); // an error occurred
-  else     console.log(data);           // successful response
+// Initialize the AWS Object
+var bucket = new AWS.S3({
+    apiVersion: '2006-03-01',
+    params: {Bucket: bucketName}
 });
 
+var params = {
+    Key:fileToBeUpload.name,
+    ContentType: fileToBeUpload.type,
+    Body: fileToBeUpload,
+    ContentDisposition: 'attachment'
+};
 
-/*bucket.upload(params).on('httpUploadProgress', function(evt) {
-document.write("Uploaded :: " + parseInt((evt.loaded * 100) / evt.total)+'%');
+/* turn off the timeout (Optional) */
+AWS.config.httpOptions.timeout = 0;
+
+bucket.upload(params).on('httpUploadProgress', function(evt) {
+    var uploaded = Math.round(evt.loaded / evt.total * 100);
+    console.log(`File uploaded: ${uploaded}%`);
 }).send(function(err, data) {
-alert("File uploaded successfully.");
-});*/
-}
-});
+    if (err){
+        // an error occurred, handle the error
+        console.log(err, err.stack);
+        return;
+    }
+
+    var fileUrl = data.Location;
+    console.log('File URL:', fileUrl);
+    alert('File is uploaded successfully!');
+})}
 		</script>
 	</body>
 </html>

@@ -7,6 +7,8 @@ CORS(app)
 app.config['SECRET_KEY']='mysecret'
 socketio=SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
+client = boto3.client('sts')
+
 
 @socketio.on('message')
 def handleMessage(msg):
@@ -53,9 +55,10 @@ def on_leave(data):
 @app.route('/<int:roomID>')
 def roomN(roomID):
 	return render_template('roomN.html',roomID=roomID)
-@app.route('/test',methods=['POST','GET'])
+@app.route('/test',methods=['POST', 'GET'])
 def test():
-	return render_template('test.html')
+    response = client.assume_role(RoleArn='arn:aws:iam::670717215081:role/watchsyncROLE', RoleSessionName='watchsyncSession')
+    return render_template('test.html',creds=response.AccessKeyId)
 
 @app.route('/join')
 def join():
@@ -65,10 +68,7 @@ if __name__ == '__main__':
 
 @app.route('/')
 def index():
-    return '''<form method=POST enctype=multipart/form-data action="upload">
-    <input type=file name=myfile>
-    <input type=submit>
-    </form>'''
+    return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
 def upload():
