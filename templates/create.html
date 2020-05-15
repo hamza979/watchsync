@@ -75,9 +75,10 @@ bucket.upload(params).on('httpUploadProgress', function(evt) {
     var fileUrl = data.Location;
     console.log('File URL:', fileUrl);
     alert('File is uploaded successfully!');
-    var addr='/join/'+filename
-    btn.onclick="location.href ="+addr;
-    btn.style.display='block';
+    btn.style.display=block
+     document.getElementById("joinbtn").onclick = function() {
+        location.href='/room'+filename;
+    }
 })}
 		</script>
 	</body>
