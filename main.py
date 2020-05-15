@@ -50,7 +50,7 @@ def on_leave(data):
     leave_room(room)
     send(username + ' has left the room.', room=room)
 
-@app.route('/<int:roomID>')
+@app.route('/room/<string:roomID>')
 def roomN(roomID):
 	return render_template('roomN.html',roomID=roomID)
 @app.route('/create',methods=['POST', 'GET'])

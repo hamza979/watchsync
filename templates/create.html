@@ -18,14 +18,27 @@
 
 	</head>
 	<body>
+
 		<div class="progress">
   <div id="prog" class="progress-bar" style="width:0%"></div>
 </div>
+<button id="joinbtn" onclick="location.href = '/join'" class='button' type='button'>Create Room</button>
 		<label for="myfile">Select a file:</label>
 <input type="file" id="myfile" name="myfile">
 <script type="text/javascript">
+	var btn = document.getElementById("joinbtn")
+	btn.style.display="none";
 var fileselector=document.getElementById('myfile')
-
+function makeid(length) {
+   var result           = '';
+   var characters       = 'abcdefghijklmnopqrstuvwxyz0123456789';
+   var charactersLength = characters.length;
+   for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+   }
+   return result;
+}
+console.log(makeid(5));
 fileselector.onchange=function(){
 console.log(fileselector.files[0].name)
 var bucket = new AWS.S3({params: {Bucket: 'watchsyncus'}});
@@ -38,9 +51,9 @@ var bucket = new AWS.S3({
     apiVersion: '2006-03-01',
     params: {Bucket: bucketName}
 });
-
+var filename=makeid(5)
 var params = {
-    Key:fileToBeUpload.name,
+    Key:filename,
     ContentType: fileToBeUpload.type,
     Body: fileToBeUpload,
     ContentDisposition: 'attachment'
@@ -62,6 +75,9 @@ bucket.upload(params).on('httpUploadProgress', function(evt) {
     var fileUrl = data.Location;
     console.log('File URL:', fileUrl);
     alert('File is uploaded successfully!');
+    var addr='/join/'+filename
+    btn.onclick="location.href ="+addr;
+    btn.style.display=block;
 })}
 		</script>
 	</body>
