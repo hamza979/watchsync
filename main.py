@@ -4,7 +4,7 @@ from flask_cors import CORS
 import os, json, boto3, threading, s3transfer, sys
 app = Flask(__name__)
 CORS(app)
-app.config['SECRET_KEY']='mysecret'
+app.config['SECRET_KEY']=os.getenv("SECRET_KEY")
 socketio=SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
 client = boto3.client('sts')
@@ -84,7 +84,6 @@ def upload():
             self._lock = threading.Lock()
 
         def __call__(self, bytes_amount):
-            # To simplify, assume this is hooked up to a single filename
             with self._lock:
                 self._seen_so_far += bytes_amount
                 percentage = (self._seen_so_far / self._size) * 100

@@ -55,7 +55,6 @@
 				var bucketName = 'watchsyncus';
 				var fileToBeUpload = fileselector.files[0];
 
-// Initialize the AWS Object
 var bucket = new AWS.S3({
 	apiVersion: '2006-03-01',
 	params: {Bucket: bucketName}
@@ -68,7 +67,6 @@ var params = {
 	ContentDisposition: 'attachment'
 };
 
-/* turn off the timeout (Optional) */
 AWS.config.httpOptions.timeout = 0;
 bucket.upload(params).on('httpUploadProgress', function(evt) {
 	var uploaded = Math.round(evt.loaded / evt.total * 100);
@@ -76,7 +74,6 @@ bucket.upload(params).on('httpUploadProgress', function(evt) {
 	console.log(`File uploaded: ${uploaded}%`);
 }).send(function(err, data) {
 	if (err){
-        // an error occurred, handle the error
         console.log(err, err.stack);
         return;
     }
