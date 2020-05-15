@@ -10,13 +10,15 @@
 
 <body style="margin:5%">
 <div class="container">
-   <video id="video" controls width="500" muted="muted" >   
+    <div style="width: 99%; margin: 0 auto;">
+   <video id="video" controls width="500" muted="muted" style="width:40%; margin: 0 auto; display: block;">   
     <source src="https://watchsyncus.s3.amazonaws.com/{{roomID}}" type="video/mp4"/>  
     <param name="allowfullscreen" value="true">
     <param name="allowscriptaccess" value="always">
     <param name="flashvars" value="file=video.mp4">
 
 </video>
+</div>
 <script type="text/javascript">
     var channel='{{roomID}}'
     $(document).ready(function(){
@@ -87,9 +89,9 @@
     )
     
 
-document.getElementById("address").innerHTML=window.location+"/"+channel
+
 </script>
-<div class="card" style="width: 30rem;">
+<div class="card" style="width: 30rem; margin: 0 auto;">
   <div class="card-header">
     Share this link to watch with your friends
   </div>
@@ -99,4 +101,7 @@ document.getElementById("address").innerHTML=window.location+"/"+channel
 </div>
 </div>
 </body>
+<script type="text/javascript">
+        document.getElementById("address").innerHTML=window.location.host+"/"+channel
+</script>
 </html>
