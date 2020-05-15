@@ -8,8 +8,10 @@
 	display: inline-block;
 	font-size: 16px;
 }
+#video{
+	width:40%;
+}
 @media (max-width: 1000px) {
-
       #video {
             width:90%;
        }
