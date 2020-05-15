@@ -9,49 +9,49 @@
 </head>
 
 <body style="margin:5%">
-<div class="container">
-    <div style="width: 99%; margin: 0 auto;">
-   <video id="video" controls width="500" muted="muted" style="width:40%; margin: 0 auto; display: block;">   
-    <source src="https://watchsyncus.s3.amazonaws.com/{{roomID}}" type="video/mp4"/>  
-    <param name="allowfullscreen" value="true">
-    <param name="allowscriptaccess" value="always">
-    <param name="flashvars" value="file=video.mp4">
+    <div class="container">
+        <div style="width: 99%; margin: 0 auto;">
+         <video id="video" controls width="500" muted="muted" style="width:40%; margin: 0 auto; display: block;">   
+            <source src="https://watchsyncus.s3.amazonaws.com/{{roomID}}" type="video/mp4"/>  
+            <param name="allowfullscreen" value="true">
+            <param name="allowscriptaccess" value="always">
+            <param name="flashvars" value="file=video.mp4">
 
-</video>
-</div>
-<script type="text/javascript">
-    var channel='{{roomID}}'
-    $(document).ready(function(){
-        console.log(channel)
-        var video=document.getElementById('video')
-        var userAction=true;
-        if (location.protocol !== 'https:') {
-    location.replace(`https:${location.href.substring(location.protocol.length)}`);
-}
-        var socket=io.connect('https://'+document.domain+':'+location.port,{transports:['websocket']})
-        socket.on('connect', function(){
-            socket.emit('join',{'channel':channel});
-        })
-        socket.emit('jumba',{'channel':channel})
-        $("video").on("pause", function (e) {
-                if (userAction===true){
-                if (video.readyState==4){
-                socket.emit('pause',{'time':e.target.currentTime,'channel':channel})}
+        </video>
+    </div>
+    <script type="text/javascript">
+        var channel='{{roomID}}'
+        $(document).ready(function(){
+            console.log(channel)
+            var video=document.getElementById('video')
+            var userAction=true;
+            if (location.protocol !== 'https:') {
+                location.replace(`https:${location.href.substring(location.protocol.length)}`);
             }
-            
-
-
-        })
-        $("video").on("play", function (e) {
+            var socket=io.connect('https://'+document.domain+':'+location.port,{transports:['websocket']})
+            socket.on('connect', function(){
+                socket.emit('join',{'channel':channel});
+            })
+            socket.emit('jumba',{'channel':channel})
+            $("video").on("pause", function (e) {
                 if (userAction===true){
-                socket.emit('play',{'time':e.target.currentTime,'channel':channel})
-            }
+                    if (video.readyState==4){
+                        socket.emit('pause',{'time':e.target.currentTime,'channel':channel})}
+                    }
 
-        })
-        socket.on('success',function(data){
-            alert(data);
-        })
-       socket.on('pause', function(msg){
+
+
+                })
+            $("video").on("play", function (e) {
+                if (userAction===true){
+                    socket.emit('play',{'time':e.target.currentTime,'channel':channel})
+                }
+
+            })
+            socket.on('success',function(data){
+                alert(data);
+            })
+            socket.on('pause', function(msg){
                 console.log("HELLO PAUSE")
                 userAction=false;
                 if (video.currentTime!==msg.time){
@@ -61,7 +61,7 @@
                 userAction=true
             })
 
-        socket.on('play', function(msg){
+            socket.on('play', function(msg){
                 userAction=false;
                 if (video.currentTime!==msg.time){
                     video.currentTime=msg.time
@@ -69,39 +69,53 @@
                 video.play()
                 userAction=true
             })
-        socket.on('giveMeTime',function(data){
-        var PAUSED='F'
-        if (video.paused){PAUSED='T'}
-        room = channel
-        socket.emit('syncWithTime',{'time':video.currentTime,'channel':room,'paused':video.paused})})
-        socket.on('syncWithTime',function(data){
-            console.log(data.time)
-            video.currentTime=data.time
-            userAction=false
-            console.log(data.paused)
-            if (data.paused===false){
-                video.play()
-            }
-            userAction=true
+            socket.on('giveMeTime',function(data){
+                var PAUSED='F'
+                if (video.paused){PAUSED='T'}
+                    room = channel
+                socket.emit('syncWithTime',{'time':video.currentTime,'channel':room,'paused':video.paused})})
+            socket.on('syncWithTime',function(data){
+                console.log(data.time)
+                video.currentTime=data.time
+                userAction=false
+                console.log(data.paused)
+                if (data.paused===false){
+                    video.play()
+                }
+                userAction=true
             })
-        
-    }
-    )
-    
 
+        }
+        )
 
-</script>
-<div class="card" style="width: 30rem; margin: 0 auto;">
-  <div class="card-header">
-    Share this link to watch with your friends
-  </div>
-  <ul class="list-group list-group-flush">
-    <li id="address" class="list-group-item"></li>
-  </ul>
-</div>
+        document.onkeydown = function myFunction() {
+            switch (event.keyCode) {
+                case 38:
+                event.preventDefault();
+                break;
+                case 40:
+                event.preventDefault();
+                break;
+                case 37:
+                event.preventDefault();
+                break;
+                case 39:
+                event.preventDefault();
+                break;
+            }}
+
+        </script>
+        <div class="card" style="width: 30rem; margin: 0 auto;">
+          <div class="card-header">
+            Share this link to watch with your friends
+        </div>
+        <ul class="list-group list-group-flush">
+            <li id="address" class="list-group-item"></li>
+        </ul>
+    </div>
 </div>
 </body>
 <script type="text/javascript">
-        document.getElementById("address").innerHTML=window.location.host+"/"+channel
+    document.getElementById("address").innerHTML=window.location.host+"/"+channel
 </script>
 </html>

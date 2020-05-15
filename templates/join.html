@@ -3,26 +3,26 @@
   <html lang="en">
   <head>
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/styles.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-</head>
+  	<link rel="stylesheet" href="/static/styles.css">
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  </head>
 
-<body style="margin:5%">
-<div class="container">
-	 <div class="form-group">
-    <label for="Room-id">Enter Room ID</label>
-    <input type="text" class="form-control" id="Room-id" placeholder="Room ID">
-  </div>
-<button onclick="location.href = '#'" class='btn btn-primary btn-lg btn-block'  id='ton' type='button'>Enter Room</button>
-<script type="text/javascript">
- document.getElementById("ton").onclick = function () {
- 	    var name=document.getElementById('Room-id').value  
- 	        if (name != undefined && name != null) {
-        location.href = "/room/"+name;}
-    
-}
+  <body style="margin:5%">
+  	<div class="container">
+  		<div class="form-group">
+  			<label for="Room-id">Enter Room ID</label>
+  			<input type="text" class="form-control" id="Room-id" placeholder="Room ID">
+  		</div>
+  		<button onclick="location.href = '#'" class='btn btn-primary btn-lg btn-block'  id='ton' type='button'>Enter Room</button>
+  		<script type="text/javascript">
+  			document.getElementById("ton").onclick = function () {
+  				var name=document.getElementById('Room-id').value  
+  				if (name != undefined && name != null) {
+  					location.href = "/room/"+name;}
+  					
+  				}
 
-</script>
-</div>
-</body>
-</html>
+  			</script>
+  		</div>
+  	</body>
+  	</html>
