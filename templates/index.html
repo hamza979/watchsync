@@ -5,7 +5,11 @@
   	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   	<link rel="stylesheet" href="/static/styles.css">
   </head>
-
+  <script type="text/javascript">
+  	if (location.protocol !== 'https:') {
+  		location.replace(`https:${location.href.substring(location.protocol.length)}`);
+  	}
+  </script>
   <body style="margin:5%">
   	<div class="container">
   		<button onclick="location.href = '/create'" class='btn btn-primary btn-lg btn-block' type='button'>Create Room</button>
