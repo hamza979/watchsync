@@ -12,7 +12,7 @@
     <div class="container">
         <div style="width: 99%; margin: 0 auto;">
          <video id="video" controls width="500" muted="muted" style="width:40%; margin: 0 auto; display: block;">   
-            <source src="https://watchsyncus.s3.amazonaws.com/{{roomID}}" type="video/mp4"/>  
+            <source src="https://watchsyncus.s3-accelerate.amazonaws.com/{{roomID}}" type="video/mp4"/>  
             <param name="allowfullscreen" value="true">
             <param name="allowscriptaccess" value="always">
             <param name="flashvars" value="file=video.mp4">
@@ -116,6 +116,6 @@
 </div>
 </body>
 <script type="text/javascript">
-    document.getElementById("address").innerHTML=window.location.host+"/"+channel
+    document.getElementById("address").innerHTML=window.location.host+"/"+channel+" <br>Room ID = "+channel
 </script>
 </html>
