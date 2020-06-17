@@ -53,7 +53,7 @@ def on_leave(data):
 @app.route('/room/<string:roomID>')
 def roomN(roomID):
     response = client.assume_role(RoleArn='arn:aws:iam::670717215081:role/watchsyncROLE', RoleSessionName='watchsyncSession')
-	return render_template('roomN.html',roomID=roomID,AccessKeyId=response.get('Credentials').get('AccessKeyId'),SecretAccessKey=response.get('Credentials').get('SecretAccessKey'),SessionToken=response.get('Credentials').get('SessionToken'))
+    return render_template('roomN.html',roomID=roomID,AccessKeyId=response.get('Credentials').get('AccessKeyId'),SecretAccessKey=response.get('Credentials').get('SecretAccessKey'),SessionToken=response.get('Credentials').get('SessionToken'))
 @app.route('/create',methods=['POST', 'GET'])
 def create():
     response = client.assume_role(RoleArn='arn:aws:iam::670717215081:role/watchsyncROLE', RoleSessionName='watchsyncSession')
