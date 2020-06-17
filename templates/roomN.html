@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.24.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script type="text/javascript">
         AWS.config.update({
@@ -25,7 +26,7 @@
 <body style="margin:5%">
     <div class="container">
         <div style="width: 99%; margin: 0 auto;">
-            <video id="video" controls width="500" muted="muted" crossorigin="use-credentials" style="margin: 0 auto; display: block;">   
+            <video id="video" controls width="500" muted="muted" crossorigin="anonymous" style="margin: 0 auto; display: block;">   
                 <source src="https://watchsyncus.s3-accelerate.amazonaws.com/{{roomID}}" type="video/mp4"/>  
                 <param name="allowfullscreen" value="true">
                 <param name="allowscriptaccess" value="always">
