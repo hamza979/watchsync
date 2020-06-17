@@ -8,7 +8,7 @@ app.config['SECRET_KEY']=os.getenv("SECRET_KEY")
 socketio=SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
 client = boto3.client('sts')
-
+response = client.assume_role(RoleArn='arn:aws:iam::670717215081:role/watchsyncROLE', RoleSessionName='watchsyncSession')
 
 @socketio.on('message')
 def handleMessage(msg):
@@ -52,10 +52,9 @@ def on_leave(data):
 
 @app.route('/room/<string:roomID>')
 def roomN(roomID):
-	return render_template('roomN.html',roomID=roomID)
+	return render_template('roomN.html',roomID=roomID,AccessKeyId=response.get('Credentials').get('AccessKeyId'),SecretAccessKey=response.get('Credentials').get('SecretAccessKey'),SessionToken=response.get('Credentials').get('SessionToken'))
 @app.route('/create',methods=['POST', 'GET'])
 def create():
-    response = client.assume_role(RoleArn='arn:aws:iam::670717215081:role/watchsyncROLE', RoleSessionName='watchsyncSession')
     return render_template('create.html',AccessKeyId=response.get('Credentials').get('AccessKeyId'),SecretAccessKey=response.get('Credentials').get('SecretAccessKey'),SessionToken=response.get('Credentials').get('SessionToken'))
 
 @app.route('/join')

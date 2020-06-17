@@ -6,7 +6,15 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-
+        <script type="text/javascript">
+        AWS.config.update({
+        //These are temporary credentials generated via boto3 assume_role.
+        accessKeyId : '{{AccessKeyId}}',
+        secretAccessKey : '{{SecretAccessKey}}',
+        sessionToken : '{{SessionToken}}',
+        useAccelerateEndpoint : true
+    });
+</script>
 </head>
   <script type="text/javascript">
     
@@ -17,7 +25,7 @@
 <body style="margin:5%">
     <div class="container">
         <div style="width: 99%; margin: 0 auto;">
-            <video id="video" controls width="500" muted="muted" style="margin: 0 auto; display: block;">   
+            <video id="video" controls width="500" muted="muted" crossorigin="use-credentials" style="margin: 0 auto; display: block;">   
                 <source src="https://watchsyncus.s3-accelerate.amazonaws.com/{{roomID}}" type="video/mp4"/>  
                 <param name="allowfullscreen" value="true">
                 <param name="allowscriptaccess" value="always">
@@ -27,10 +35,13 @@
                 src="https://watchsyncus.s3-accelerate.amazonaws.com/{{roomID}}.vtt"/>
             </video>
         </div>
+                <input type="file" id="subfile" name="subfile" style="display:none">
+        <label for="subfile" class="btn btn-primary">Change Subtitle</label>
         <br>
         <br>
         <script type="text/javascript">
             var channel='{{roomID}}'
+            var subname=channel+'.vtt'
             $(document).ready(function(){
                 console.log(channel)
                 var video=document.getElementById('video')
@@ -110,7 +121,39 @@
                     event.preventDefault();
                     break;
                 }}
+            subselector.onchange=function(){
+                console.log(subselector.files[0].name)
+                var bucket = new AWS.S3({params: {Bucket: 'watchsyncus'}});
+                var fileChooser = document.getElementById('subfile');
+                var bucketName = 'watchsyncus';
+                var fileToBeUpload = subselector.files[0];
 
+                var bucket = new AWS.S3({
+                    apiVersion: '2006-03-01',
+                    params: {Bucket: bucketName}
+                });
+                var params = {
+                    Key:subname,
+                    ContentType: fileToBeUpload.type,
+                    Body: fileToBeUpload,
+                    ContentDisposition: 'attachment'
+                };
+
+                AWS.config.httpOptions.timeout = 0;
+                bucket.upload(params).on('httpUploadProgress', function(evt) {
+                    var uploaded = Math.round(evt.loaded / evt.total * 100);
+                    console.log(`Subtitle uploaded: ${uploaded}%`);
+                }).send(function(err, data) {
+                    if (err){
+                        console.log(err, err.stack);
+                        return;
+                    }
+
+                    var fileUrl = data.Location;
+                    console.log('File URL:', fileUrl);
+                    alert('Subtitle is uploaded successfully! You may need to refresh the page.');
+
+})}
             </script>
             <div class="card" style="width: 30rem; margin: 0 auto;">
               <div class="card-header">
