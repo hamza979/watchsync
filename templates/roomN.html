@@ -36,11 +36,12 @@
                 src="https://watchsyncus.s3-accelerate.amazonaws.com/{{roomID}}.vtt"/>
             </video>
         </div>
-                <input type="file" id="subfile" name="subfile" style="display:none">
+        <input type="file" id="subfile" name="subfile" style="display:none">
         <label for="subfile" class="btn btn-primary">Change Subtitle</label>
         <br>
         <br>
         <script type="text/javascript">
+            var subselector=document.getElementById('subfile')
             var channel='{{roomID}}'
             var subname=channel+'.vtt'
             $(document).ready(function(){
