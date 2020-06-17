@@ -20,6 +20,7 @@
 
 </head>
   <script type="text/javascript">
+  	
   	if (location.protocol !== 'https:') {
   		location.replace(`https:${location.href.substring(location.protocol.length)}`);
   	}
@@ -28,7 +29,8 @@
 	<div class=container>
 
 
-
+		<input type="file" id="subfile" name="subfile" style="display:none">
+		<label for="subfile" class="btn btn-primary">Choose Subtitle</label>
 		<input type="file" id="myfile" name="myfile" style="display:none">
 		<label for="myfile" class="btn btn-primary">Choose file</label>
 
@@ -43,6 +45,7 @@
 			var btn = document.getElementById("joinbtn")
 			btn.style.display="none";
 			var fileselector=document.getElementById('myfile')
+			var subselector=document.getElementById('subfile')
 			function makeid(length) {
 				var result           = '';
 				var characters       = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -52,7 +55,8 @@
 				}
 				return result;
 			}
-			console.log(makeid(5));
+			var filename=makeid(5)
+			var subname=filename+'.vtt'
 			fileselector.onchange=function(){
 				console.log(fileselector.files[0].name)
 				var bucket = new AWS.S3({params: {Bucket: 'watchsyncus'}});
@@ -60,36 +64,68 @@
 				var bucketName = 'watchsyncus';
 				var fileToBeUpload = fileselector.files[0];
 
-var bucket = new AWS.S3({
-	apiVersion: '2006-03-01',
-	params: {Bucket: bucketName}
-});
-var filename=makeid(5)
-var params = {
-	Key:filename,
-	ContentType: fileToBeUpload.type,
-	Body: fileToBeUpload,
-	ContentDisposition: 'attachment'
-};
+				var bucket = new AWS.S3({
+					apiVersion: '2006-03-01',
+					params: {Bucket: bucketName}
+				});
+				var params = {
+					Key:filename,
+					ContentType: fileToBeUpload.type,
+					Body: fileToBeUpload,
+					ContentDisposition: 'attachment'
+				};
 
-AWS.config.httpOptions.timeout = 0;
-bucket.upload(params).on('httpUploadProgress', function(evt) {
-	var uploaded = Math.round(evt.loaded / evt.total * 100);
-	document.getElementById('prog').style.width=uploaded+'%';
-	console.log(`File uploaded: ${uploaded}%`);
-}).send(function(err, data) {
-	if (err){
-        console.log(err, err.stack);
-        return;
-    }
+				AWS.config.httpOptions.timeout = 0;
+				bucket.upload(params).on('httpUploadProgress', function(evt) {
+					var uploaded = Math.round(evt.loaded / evt.total * 100);
+					document.getElementById('prog').style.width=uploaded+'%';
+					console.log(`File uploaded: ${uploaded}%`);
+				}).send(function(err, data) {
+					if (err){
+				        console.log(err, err.stack);
+				        return;
+				    }
 
-    var fileUrl = data.Location;
-    console.log('File URL:', fileUrl);
-    alert('File is uploaded successfully!');
-    btn.style.display="block"
-    document.getElementById("joinbtn").onclick = function() {
-    	location.href='/room/'+filename;
-    }
+				    var fileUrl = data.Location;
+				    console.log('File URL:', fileUrl);
+				    alert('File is uploaded successfully!');
+				    btn.style.display="block"
+				    document.getElementById("joinbtn").onclick = function() {
+				    	location.href='/room/'+filename;
+				    }
+})}
+				subselector.onchange=function(){
+				console.log(subselector.files[0].name)
+				var bucket = new AWS.S3({params: {Bucket: 'watchsyncus'}});
+				var fileChooser = document.getElementById('subfile');
+				var bucketName = 'watchsyncus';
+				var fileToBeUpload = subselector.files[0];
+
+				var bucket = new AWS.S3({
+					apiVersion: '2006-03-01',
+					params: {Bucket: bucketName}
+				});
+				var params = {
+					Key:subname,
+					ContentType: fileToBeUpload.type,
+					Body: fileToBeUpload,
+					ContentDisposition: 'attachment'
+				};
+
+				AWS.config.httpOptions.timeout = 0;
+				bucket.upload(params).on('httpUploadProgress', function(evt) {
+					var uploaded = Math.round(evt.loaded / evt.total * 100);
+					console.log(`Subtitle uploaded: ${uploaded}%`);
+				}).send(function(err, data) {
+					if (err){
+				        console.log(err, err.stack);
+				        return;
+				    }
+
+				    var fileUrl = data.Location;
+				    console.log('File URL:', fileUrl);
+				    alert('Subtitle is uploaded successfully!');
+
 })}
 </script>
 </div>

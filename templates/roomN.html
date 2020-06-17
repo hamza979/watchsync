@@ -9,6 +9,7 @@
 
 </head>
   <script type="text/javascript">
+    
     if (location.protocol !== 'https:') {
         location.replace(`https:${location.href.substring(location.protocol.length)}`);
     }
@@ -21,7 +22,9 @@
                 <param name="allowfullscreen" value="true">
                 <param name="allowscriptaccess" value="always">
                 <param name="flashvars" value="file=video.mp4">
-
+                 <track default kind="captions"
+                srclang="en"
+                src="https://watchsyncus.s3-accelerate.amazonaws.com/{{roomID}}.vtt"/>
             </video>
         </div>
         <br>
